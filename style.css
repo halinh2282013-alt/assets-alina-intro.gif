@@ -1,0 +1,238 @@
+/* --- Reset & Biến cơ bản --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-night-blue: #171E2B;
+    --color-cold-grey: #293544;
+    --color-mist-white: #E8E9E7;
+    --color-snow-grey: #C7CDD4;
+    --color-ice-blue: #A6BDCE;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--color-night-blue);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--color-mist-white);
+}
+
+/* --- Màn hình Intro --- */
+.intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.8s ease;
+}
+
+/* Hình nền GIF phủ kín màn hình */
+.intro-bg-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.intro-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1);
+    transition: transform 2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Lớp phủ màu xanh đen trong suốt nhẹ */
+.intro-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(23, 30, 43, 0.25);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Lớp sương tuyết phủ màn hình khi chuyển cảnh */
+.frost-transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(166, 189, 206, 0.85) 0%, rgba(41, 53, 68, 0.9) 100%);
+    opacity: 0;
+    z-index: 3;
+    pointer-events: none;
+    transition: opacity 1.2s ease-in-out;
+}
+
+/* --- Cụm nội dung trung tâm --- */
+.intro-content {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    max-width: 800px;
+}
+
+/* 1. Tên website */
+.intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--color-mist-white);
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(15px);
+    animation: none; /* Kích hoạt bằng JS theo chuỗi */
+}
+
+/* 2. Slogan */
+.intro-slogan {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--color-snow-grey);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+/* 3. Nút đi vào website */
+.intro-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: var(--color-mist-white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    padding: 14px 36px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: background 0.4s ease, border-color 0.4s ease, transform 0.2s ease, opacity 0.8s ease;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+.intro-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.intro-btn:active {
+    transform: scale(0.97);
+}
+
+/* --- Trạng thái Animation xuất hiện (Giai đoạn 1 -> 4) --- */
+.intro-screen.loaded .intro-title {
+    animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+}
+
+.intro-screen.loaded .intro-slogan {
+    animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+}
+
+.intro-screen.loaded .intro-btn {
+    animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Trạng thái chuyển cảnh vào website --- */
+.intro-screen.transitioning .intro-bg-img {
+    transform: scale(1.12); /* Phóng to nhẹ góc nhìn tiến về phía trước */
+}
+
+.intro-screen.transitioning .intro-content {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.intro-screen.transitioning .frost-transition-overlay {
+    opacity: 1; /* Sương tuyết phủ màn hình */
+}
+
+.intro-screen.hidden {
+    display: none;
+}
+
+/* --- Khu vực nội dung chính (Ẩn ban đầu) --- */
+.main-content {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-night-blue);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease;
+}
+
+.main-content.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.main-placeholder {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.main-placeholder h2 {
+    font-size: 3rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+}
+
+.main-placeholder p {
+    font-size: 1rem;
+    color: var(--color-snow-grey);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+}
+
+/* --- Hỗ trợ prefers-reduced-motion (Giảm chuyển động theo hệ điều hành) --- */
+@media (prefers-reduced-motion: reduce) {
+    .intro-title, .intro-slogan, .intro-btn {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+    .intro-bg-img, .intro-screen, .frost-transition-overlay, .main-content {
+        transition: none !important;
+    }
+}

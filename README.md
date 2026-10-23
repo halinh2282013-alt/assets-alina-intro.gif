@@ -1,0 +1,1 @@
+# assets-alina-intro.gif
